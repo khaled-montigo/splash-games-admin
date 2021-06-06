@@ -1,0 +1,154 @@
+html{
+  font-family: sans-serif;
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+body{
+  margin: 0;
+  font-family: Montserrat,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  text-align: left;
+  background-color: #EEF0F8;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  background-color: #EEF0F8;
+  background-repeat: no-repeat;
+  webkit-tap-highlight-color: transparent;
+
+}
+
+h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+  margin-bottom: .5rem;
+  font-family: Secular One,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+.input_group_end{
+  border-top-right-radius: .25rem !important;
+  border-bottom-right-radius: .25rem !important;
+}
+
+
+.page-title{
+  font-size: 40px;
+}
+
+.select2-row.is-touched .css-yk16xz-control{
+  border-color: #dc3545;
+  box-shadow: 0 0 0 1px #dc3545;
+}
+
+.select2-row.is-valid .css-yk16xz-control{
+  border-color: #4a9606;
+  box-shadow: 0 0 0 1px #4a9606;
+}
+
+.select2-row .invalid-feedback {
+  display: block !important;
+}
+.select-2 .css-26l3qy-menu{
+  z-index: 70;
+}
+.has-error .select-2  .css-yk16xz-control {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 1px #dc3545;
+}
+
+.has-error .select-2 .css-yk16xz-control{
+  border-color: #dc3545;
+  box-shadow: 0 0 0 1px #dc3545;
+}
+
+.has-error .select-2 .css-1pahdxg-control{
+  border-color: #dc3545;
+  box-shadow: 0 0 0 1px #dc3545;
+}
+
+
+.has-error .select-2  div svg{
+  color: #dc3545;
+}
+
+.invalid-feedback {
+  display: none;
+  width: 100%;
+  margin-top: .25rem;
+  font-size: 80%;
+  color: #dc3545;
+}
+
+
+
+.custom-my-file-input{
+  color: black;
+}
+.custom-my-file-input::-webkit-file-upload-button {
+  visibility: hidden;
+  width: 0;
+  padding-top: 6px;
+}
+
+
+.custom-my-file-input::before {
+  content: attr(data-text);
+  display: inline-block;
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+  padding: .375rem .75rem;
+  float: left;
+  outline: none;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: .25rem;
+}
+.custom-my-file-input:hover::before {
+  border-color: black;
+}
+.custom-my-file-input:active {
+  outline: 0;
+}
+.custom-my-file-input:active::before {
+  background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+
+
+
+
+.ShowAllFormSteps .rsw_2f{
+  opacity: 1 !important;
+  position: relative !important;
+
+}
+
+
+.field-no-name{
+  border: 2px dotted #ff0000;
+}
+.field-no-name::before{
+  content: "No Name Found";
+  text-align: center;
+
+}

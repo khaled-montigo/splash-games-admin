@@ -1,0 +1,39 @@
+.main-sidebar {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
+  position: fixed;
+  top: 0px;
+  min-height: 100%;
+  width: 260px;
+  background-color: #1d1d1d;
+  z-index: 101;
+  left: 0;
+
+  /*background-image: linear-gradient(*/
+  /*        180deg*/
+  /*        ,#ffffff,#fff  );*/
+  overflow: scroll;
+}
+.pro-sidebar {
+  width: 260px;
+  min-width: 260px;
+}
+
+.pro-sidebar .pro-menu .pro-menu-item.pro-sub-menu > .pro-inner-item > .pro-arrow-wrapper {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.pro-sidebar > .pro-sidebar-inner > .pro-sidebar-layout .pro-sidebar-header {
+  padding: 25px;
+  height: 112px;
+  align-items: center;
+}
+
+.pro-sidebar-header img {
+  width: 30%;
+  align-items: center;
+  margin-left : 70px;
+
+}
