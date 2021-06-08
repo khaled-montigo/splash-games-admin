@@ -142,7 +142,7 @@ export default function AddGame({SocialEngagingOptions,PromoToolsOptions, GamePr
 
     const OnImagesValidation = () => {
         let HasError = false;
-        const ImagesValidations = [imageState,logoState,devicesImageState,sliderImagesState]
+        const ImagesValidations = [imageState,logoState,sliderImagesState]
         ImagesValidations.forEach(element => {
             if(element.images.length < 1 ) {
                 HasError = true;
@@ -270,9 +270,6 @@ export default function AddGame({SocialEngagingOptions,PromoToolsOptions, GamePr
             data.slider_images = sliderImages;
         }
 
-
-
-        console.log(data);
         const formData =  jsonToFormData(data);
         SubmitData(formData);
 
@@ -492,7 +489,7 @@ export default function AddGame({SocialEngagingOptions,PromoToolsOptions, GamePr
                                                            return false;
                                                        },
                                                    }}
-                                                   name={'description[en][devices]'}
+                                                   name={'description[en][devices][]'}
                                                    label={'Devices'}
                                                    wrapperCol={{xs:{span:12,offset:0},md:{span:12,offset:0},lg:{span:9,offset:0},xl:{span:8,offset:0}}}
                                                    labelCol={{xs:{span:12,offset:0},md:{span:12,offset:0},lg:{span:3,offset:0},xl:{span:2,offset:0}}} >

@@ -355,9 +355,9 @@ const AddGameProperty = () => {
         {sweetAlertState === 1 &&
         <SweetAlert success title="The Game Property added successfully " onConfirm={()=>{
             console.log("FFF");
-            Router.push('/engaging-social')
+            Router.replace('/engaging-social')
         }} onCancel={()=>{
-            Router.push('/engaging-social')
+            Router.replace('/engaging-social')
         }}>
             You clicked the button!
         </SweetAlert>

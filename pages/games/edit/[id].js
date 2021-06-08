@@ -599,7 +599,7 @@ export default function EditGame({GameData, SocialEngagingOptions,PromoToolsOpti
                                                            return false;
                                                        },
                                                    }}
-                                                   name={'description[en][devices]'}
+                                                   name={'description[en][devices][]'}
                                                    label={'Devices'}
                                                    $defaultValue={GetSelectedDevices()}
                                                    wrapperCol={{xs:{span:12,offset:0},md:{span:12,offset:0},lg:{span:9,offset:0},xl:{span:8,offset:0}}}

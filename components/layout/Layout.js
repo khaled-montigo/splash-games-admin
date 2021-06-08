@@ -11,21 +11,36 @@ import { useRouter } from 'next/router'
 const Layout = ({children}) => {
     const [cookie, setCookie] = useCookies(["login"])
     const router = useRouter()
+    console.log(router);
    useEffect(()=>{
        if(!cookie.login){
-           router.push('/login')
+           router.replace('/login')
        }
    },[])
 
+    const ClearRoute = () =>{
+       if(router.asPath === "/login"){
+           return true
+       }
+       return false
+    }
+
+
     return (
         <>
-            <Sidebar/>
-            <TopNav/>
 
-            <div className={'page-content'}>
-                {children}
-            </div>
+            {ClearRoute() ? children :
+            <>
+                <Sidebar/>
+                <TopNav/>
+
+                <div className={'page-content'}>
+                    {children}
+                </div>
+            </>
+            }
         </>
     );
 }
+
 export default Layout;

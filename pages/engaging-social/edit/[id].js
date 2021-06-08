@@ -275,9 +275,9 @@ export default function EditGameProperty ({GameData}){
         {sweetAlertState === 1 &&
         <SweetAlert success title="The Game Property added successfully " onConfirm={()=>{
             console.log("FFF");
-            Router.push('/game-properties')
+            Router.replace('/game-properties')
         }} onCancel={()=>{
-            Router.push('/game-properties')
+            Router.replace('/game-properties')
         }}>
             You clicked the button!
         </SweetAlert>

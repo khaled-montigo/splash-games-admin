@@ -14,7 +14,7 @@ export default function Login(){
 
     useEffect(()=>{
         if(cookie.login){
-            router.push('/')
+            router.replace('/')
         }
     },[])
 
@@ -27,7 +27,7 @@ export default function Login(){
                maxAge: 3600, // Expires after 1hr
                sameSite: true,
            })
-           router.push('/')
+           router.replace('/')
        }
     }
 

@@ -15,20 +15,13 @@ import { CookiesProvider } from "react-cookie"
 
 function MyApp({ Component, pageProps }) {
 
-    if(Component.name == "Login"){
-        return (
-            <CookiesProvider>
+    return (
+        <CookiesProvider>
+            <Layout>
                 <Component {...pageProps} />
-            </CookiesProvider>
+            </Layout>
+        </CookiesProvider>
+    );
 
-        )
-    }
-  return (
-      <CookiesProvider>
-      <Layout>
-          <Component {...pageProps} />
-      </Layout>
-      </CookiesProvider>
-  );
 }
 export default store.withRedux(MyApp);
