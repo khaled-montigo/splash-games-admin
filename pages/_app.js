@@ -14,7 +14,6 @@ import Layout from "../components/layout/Layout";
 import { CookiesProvider } from "react-cookie"
 
 function MyApp({ Component, pageProps }) {
-
     if(Component.name == "Login"){
         return (
             <CookiesProvider>
@@ -22,7 +21,7 @@ function MyApp({ Component, pageProps }) {
             </CookiesProvider>
 
         )
-    }
+    }else{
   return (
       <CookiesProvider>
       <Layout>
@@ -30,5 +29,6 @@ function MyApp({ Component, pageProps }) {
       </Layout>
       </CookiesProvider>
   );
+}
 }
 export default store.withRedux(MyApp);
