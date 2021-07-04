@@ -37,7 +37,6 @@ const AddGameProperty = () => {
         const ImagesValidations = [iconState]
         ImagesValidations.forEach(element => {
             if(element.images.length < 1 ) {
-                console.log("FF");
                 setIconState({...iconState, valid : false});
                 IsValid = false;
             }else{
@@ -48,25 +47,21 @@ const AddGameProperty = () => {
     }
 
     const OnFormSubmit = (e) => {
-        console.log("OnFormSubmit");
         e.preventDefault();
         OnImagesValidation();
         submitValid  = true;
         const { $invalid, $batchDirty, $weakErrors } = $formutil.current;
         if ($invalid) {
-            console.log("OnFormSubmit $invalid");
             $batchDirty(true);
             return;
         }
         if(!OnImagesValidation()){
             $batchDirty(true);
-            console.log("OnFormSubmit OnImagesValidation");
             return;
         }
         const form = document.querySelector('#example-form');
 
         const str = serialize(form);
-        console.log(str);
 
         const data = serialize(form, { hash: true });
         data.icon = iconState.images[0].file;
@@ -148,7 +143,6 @@ const AddGameProperty = () => {
 
 
                                                         {imageList.map((image, index) => {
-                                                            console.log(index);
                                                             return (
                                                                 <>
                                                                     <UploadImageRender multiple={undefined}  image={image} imageColData={{"xs":{"span":12,"offset":0},"md":{"span":12,"offset":0},"lg":{"span":6,"offset":0},"xl":{"span":5,"offset":0}}} index={index} onImageUpload={onImageUpdate} onImageRemove={onImageRemove}/>
@@ -270,10 +264,10 @@ const AddGameProperty = () => {
 
         {sweetAlertState === 1 &&
         <SweetAlert success title="The Game Property added successfully " onConfirm={()=>{
-            console.log("FFF");
-            Router.push('/game-properties')
+
+            Router.replace('/game-properties')
         }} onCancel={()=>{
-            Router.push('/game-properties')
+            Router.replace('/game-properties')
         }}>
             You clicked the button!
         </SweetAlert>

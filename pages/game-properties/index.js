@@ -10,7 +10,7 @@ import {MdDeleteForever} from 'react-icons/md';
 
 
 export default function GameDetails({GamesPropertiesList}){
-    console.log(GamesPropertiesList.data);
+
     const columns = [
         {
             name: 'Icon',

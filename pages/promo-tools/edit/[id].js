@@ -46,7 +46,6 @@ export default function EditGameProperty ({GameData}){
         const ImagesValidations = []
         ImagesValidations.forEach(element => {
             if(element.images.length < 1 ) {
-                console.log("FF");
                 setIconState({...iconState, valid : false});
                 IsValid = false;
             }else{
@@ -57,7 +56,6 @@ export default function EditGameProperty ({GameData}){
     }
 
     const OnFormSubmit = (e) => {
-        console.log("OnFormSubmit");
         e.preventDefault();
         OnImagesValidation();
         submitValid  = true;
@@ -165,7 +163,6 @@ export default function EditGameProperty ({GameData}){
 
 
                                                         {imageList.map((image, index) => {
-                                                            console.log(index);
                                                             return (
                                                                 <>
                                                                     <UploadImageRender multiple={undefined}  image={image} imageColData={{"xs":{"span":12,"offset":0},"md":{"span":12,"offset":0},"lg":{"span":6,"offset":0},"xl":{"span":5,"offset":0}}} index={index} onImageUpload={onImageUpdate} onImageRemove={onImageRemove}/>
@@ -346,10 +343,9 @@ export default function EditGameProperty ({GameData}){
 
         {sweetAlertState === 1 &&
         <SweetAlert success title="The Game Property added successfully " onConfirm={()=>{
-            console.log("FFF");
-            Router.push('/promo-tools')
+            Router.replace('/promo-tools')
         }} onCancel={()=>{
-            Router.push('/promo-tools')
+            Router.replace('/promo-tools')
         }}>
             You clicked the button!
         </SweetAlert>

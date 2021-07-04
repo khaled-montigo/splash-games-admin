@@ -7,28 +7,35 @@ import GetApiUrl from '/utility/Config'
 import DataTable from 'react-data-table-component';
 import {BiEdit} from 'react-icons/bi';
 import {MdDeleteForever} from 'react-icons/md';
+import {useCookies} from "react-cookie";
+import axios from "axios";
 
 
 export default function GameDetails({GamesPropertiesList}){
-
+    const [myCookie, setCookie] = useCookies(["session"]);
+    const [sweetAlertState, setSweetAlertState] = React.useState(0);
+    const [errorAlertState, setErrorAlertState] = React.useState({
+        serverError : 0,
+        message : "",
+        errors : ""
+    });
     const columns = [
         {
-            name: 'Icon',
-            selector: 'icon',
-            cell: row => <div><img className={'table-list-icon'} src={row.icon}/></div>
+            name: 'Image',
+            selector: 'image',
+            cell: row => <div><img className={'table-list-icon'} src={row.image}/></div>
         },
         {
-            name: 'Title',
-            selector: 'title',
-            sortable: true,
+            name: 'Logo',
+            selector: 'logo',
+            cell: row => <div><img className={'table-list-icon'} src={row.logo}/></div>
         },
         {
-            name: 'description',
-            selector: 'description',
+            name: 'Name',
+            selector: 'name',
             sortable: true,
-            right: true,
+        },
 
-        },
         {
             name: 'action',
             sortable: true,
@@ -43,18 +50,37 @@ export default function GameDetails({GamesPropertiesList}){
     const ActionRow = (row) =>{
         return(
             <>
-                <a href={`/promo-tools/edit/${row.id}`} className="btn btn-sm btn-clean btn-icon">
+                <a href={`/games/edit/${row.id}`} className="btn btn-sm btn-clean btn-icon">
                     <BiEdit/>
                 </a>
-                <button onClick={DeleteRow(row.id)} className="datatable-delete-button btn btn-sm btn-clean btn-icon">
+                <button onClick={() => { DeleteRow(row.id) }} className="datatable-delete-button btn btn-sm btn-clean btn-icon">
                     <MdDeleteForever/>
                 </button>
             </>
         )
     }
 
-    const DeleteRow = (ID) =>{
 
+    const DeleteRow = (ID) =>{
+        let url = GetApiUrl("games/" + ID);
+        axios.delete(url, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': 'Bearer ' + myCookie.session,
+            }
+        }).then(res => { // then print response status
+            if(res.data.success){
+                setSweetAlertState(1);
+            }
+        }).catch(error => {
+            const ErrorData = GetErrorsFromResponse(error.response);
+            setErrorAlertState({
+                serverError: ErrorData.serverError,
+                message: ErrorData.message,
+                errors: ErrorData.errors
+            });
+            window.scrollTo(0, 0);
+        });
     }
 
 
@@ -62,6 +88,16 @@ export default function GameDetails({GamesPropertiesList}){
 
     return(
         <>
+            {errorAlertState.serverError != 0 &&
+            (
+                <Alert variant="danger">
+                    <Alert.Heading>Error : {errorAlertState.serverError}</Alert.Heading>
+                    <p>{errorAlertState.message}</p>
+                    <hr />
+                    <p dangerouslySetInnerHTML={{__html: errorAlertState.errors}} className="mb-0"></p>
+                </Alert>
+            )
+            }
             <Card className={'custom-card mt-3'}>
                 <Card.Header>
                     <h4>Game properties </h4>
@@ -79,6 +115,15 @@ export default function GameDetails({GamesPropertiesList}){
                     </Row>
                 </Card.Body>
             </Card>
+            {sweetAlertState === 1 &&
+            <SweetAlert success title="The Model Deleted successfully " onConfirm={() => {
+                window.location.reload();
+            }} onCancel={() => {
+                window.location.reload();
+            }}>
+                You clicked the button!
+            </SweetAlert>
+            }
         </>
 
     )
@@ -87,7 +132,7 @@ export default function GameDetails({GamesPropertiesList}){
 
 
 export async function getServerSideProps({params}){
-    let url = GetApiUrl("promo-tools");
+    let url = GetApiUrl("games");
     const request = await fetch(url)
     const GamesPropertiesList = await request.json()
 
