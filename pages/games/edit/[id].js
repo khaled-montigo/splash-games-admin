@@ -17,9 +17,16 @@ import Router from "next/router";
 import {LanguageValidations} from '/utility/ValidationChecker'
 import serialize from "form-serialize";
 import jsonToFormData from "/utility/FormDataGenerator";
+import {useCookies} from "react-cookie";
 
 export default function EditGame({GameData, SocialEngagingOptions,PromoToolsOptions, GamePropertiesOptions}){
-    console.log(GameData)
+    const [myCookie, setCookie] = useCookies(["session"]);
+    const [sweetAlertState, setSweetAlertState] = React.useState(0);
+    const [errorAlertState, setErrorAlertState] = React.useState({
+        serverError : 0,
+        message : "",
+        errors : ""
+    });
     let submitValid = false;
     let $formutil = React.createRef();
     const [formCurrentStepState, setFormCurrentStepState] = useState(1)
@@ -92,6 +99,7 @@ export default function EditGame({GameData, SocialEngagingOptions,PromoToolsOpti
             })
         }
 
+
         return selectedDevices;
     }
 
@@ -156,40 +164,122 @@ export default function EditGame({GameData, SocialEngagingOptions,PromoToolsOpti
     const onLogoChange = (imageList, addUpdateIndex) => {
         setLogoState({images : imageList, valid : true});
     };
-    const [devicesImageState, setDevicesImageState] = React.useState({images: [{data_url : GameData.devices_image, old : true}], valid : true});
+
+
+    const [devicesImageState, setDevicesImageState] = React.useState({images: [], valid : true});
     const onDevicesImageChange = (imageList, addUpdateIndex) => {
-        setDevicesImageState({images : imageList, valid : true});
+        if(devicesImageState.images.length > imageList.length){
+            setDevicesImageState({images : imageList, valid : true});
+            return;
+        }else {
+            if(!Array.isArray(addUpdateIndex)) {
+                UploadImage("devices-image", imageList[addUpdateIndex].file)
+                    .then(data => {
+                        if (data.success) {
+                            imageList[addUpdateIndex].imageName = data.data.image;
+                            setDevicesImageState({images: imageList, valid: true});
+                        }
+                    })
+                    .catch(err => {
+                        imageList.splice(addUpdateIndex, 1)
+                        let valid = true;
+                        if (imageList.length < 1){
+                            valid = false;
+                        }
+                        setDevicesImageState({images: imageList, valid: valid});
+                    })
+                return;
+            }
+            addUpdateIndex.forEach(element => {
+                UploadImage("devices-image",imageList[element].file)
+                    .then(data => {
+                        if(data.success){
+                            imageList[element].imageName = data.data.image;
+                            setDevicesImageState({images : imageList, valid : true});
+                        }
+                    })
+                    .catch(err => console.log(err))
+            })
+        }
     };
+
     const [sliderImagesState, setSliderImagesState] = React.useState({images: [], valid : true});
     const onSliderImagesChange = (imageList, addUpdateIndex) => {
-        setSliderImagesState({images : imageList, valid : true});
-    };
-    useEffect(() => {
-        if(GameData.images != null){
-            if(GameData.images.includes(',')){
-                const _imagesListStringSplit = GameData.images.split(",");
-                const _ImagesListData = sliderImagesState.images
-                _imagesListStringSplit.forEach((element) => {
-                    const _ImageObj = {data_url : element, old : true}
-                    _ImagesListData.push(_ImageObj);
-                })
-                setSliderImagesState({images: _ImagesListData, valid: sliderImagesState.valid})
+        if(sliderImagesState.images.length > imageList.length){
+            setSliderImagesState({images : imageList, valid : true});
+            return;
+        }else {
+            if(!Array.isArray(addUpdateIndex)) {
+                UploadImage("sliders-image", imageList[addUpdateIndex].file)
+                    .then(data => {
+                        if (data.success) {
+                            imageList[addUpdateIndex].imageName = data.data.image;
+                            setSliderImagesState({images: imageList, valid: true});
+                        }
+                    })
+                    .catch(err => {
+                        imageList.splice(addUpdateIndex, 1)
+                        let valid = true;
+                        if (imageList.length < 1){
+                            valid = false;
+                        }
+                        setSliderImagesState({images: imageList, valid: valid});
+                    })
+                return;
             }
+            addUpdateIndex.forEach(element => {
+                UploadImage("sliders-image",imageList[element].file)
+                    .then(data => {
+                        if(data.success){
+                            imageList[element].imageName = data.data.image;
+                            setSliderImagesState({images : imageList, valid : true});
+                        }
+                    })
+                    .catch(err => console.log(err))
+            })
         }
-        if(GameData.TournamentsArea != null){
-            setHasTournamentsArea(true)
-        }
-    },[])
-
-
-
+    };
 
 
 
     const [TournamentsArea_image_State, setTournamentsArea_image_State] = React.useState({images: [], valid : true});
     const onTournamentsArea_image_Change = (imageList, addUpdateIndex) => {
-        setTournamentsArea_image_State({images : imageList, valid : true});
+        if(TournamentsArea_image_State.images.length > imageList.length){
+            setTournamentsArea_image_State({images : imageList, valid : true});
+            return;
+        }else {
+            if(!Array.isArray(addUpdateIndex)) {
+                UploadImage("tournaments-spins", imageList[addUpdateIndex].file)
+                    .then(data => {
+                        if (data.success) {
+                            imageList[addUpdateIndex].imageName = data.data.image;
+                            setTournamentsArea_image_State({images: imageList, valid: true});
+                        }
+                    })
+                    .catch(err => {
+                        imageList.splice(addUpdateIndex, 1)
+                        let valid = true;
+                        if (imageList.length < 1){
+                            valid = false;
+                        }
+                        setTournamentsArea_image_State({images: imageList, valid: valid});
+                    })
+                return;
+            }
+            addUpdateIndex.forEach(element => {
+                UploadImage("tournaments-spins",imageList[element].file)
+                    .then(data => {
+                        if(data.success){
+                            imageList[element].imageName = data.data.image;
+                            setTournamentsArea_image_State({images : imageList, valid : true});
+                        }
+                    })
+                    .catch(err => console.log(err))
+            })
+        }
     };
+
+
 
     const [tournamentsArea_en_description_State , setTournamentsArea_en_description_State] =  React.useState('');
     const TournamentsArea_en_description_Ref =  React.createRef();
@@ -210,7 +300,39 @@ export default function EditGame({GameData, SocialEngagingOptions,PromoToolsOpti
 
     const [SpinsArea_image_State, setSpinsArea_image_State] = React.useState({images: [], valid : true});
     const onSpinsArea_image_Change = (imageList, addUpdateIndex) => {
-        setSpinsArea_image_State({images : imageList, valid : true});
+        if(SpinsArea_image_State.images.length > imageList.length){
+            setSpinsArea_image_State({images : imageList, valid : true});
+            return;
+        }else {
+            if(!Array.isArray(addUpdateIndex)) {
+                UploadImage("tournaments-spins", imageList[addUpdateIndex].file)
+                    .then(data => {
+                        if (data.success) {
+                            imageList[addUpdateIndex].imageName = data.data.image;
+                            setSpinsArea_image_State({images: imageList, valid: true});
+                        }
+                    })
+                    .catch(err => {
+                        imageList.splice(addUpdateIndex, 1)
+                        let valid = true;
+                        if (imageList.length < 1){
+                            valid = false;
+                        }
+                        setSpinsArea_image_State({images: imageList, valid: valid});
+                    })
+                return;
+            }
+            addUpdateIndex.forEach(element => {
+                UploadImage("tournaments-spins",imageList[element].file)
+                    .then(data => {
+                        if(data.success){
+                            imageList[element].imageName = data.data.image;
+                            setSpinsArea_image_State({images : imageList, valid : true});
+                        }
+                    })
+                    .catch(err => console.log(err))
+            })
+        }
     };
 
     const [spinsArea_en_description_State , setSpins_en_description_State] =  React.useState('');
@@ -231,7 +353,68 @@ export default function EditGame({GameData, SocialEngagingOptions,PromoToolsOpti
     }
 
 
+    useEffect(() => {
+        if(Array.isArray(GameData.images)) {
+            const _ImagesListData = sliderImagesState.images
+            GameData.images.forEach((element) => {
+                const imageName =  element.toString().replace(GameData.base_url, "");
+                const _ImageObj = {data_url : element, imageName : imageName, old : true}
+                _ImagesListData.push(_ImageObj);
+            });
+            setSliderImagesState({images: _ImagesListData, valid: sliderImagesState.valid})
+        }
+        if(GameData.devices_image){
+            const imageName =  GameData.devices_image.toString().replace(GameData.base_url, "");
+            const _ImageObj = {data_url : GameData.devices_image, imageName : imageName, old : true};
+            console.log(_ImageObj)
+            setDevicesImageState({
+                images: [_ImageObj],
+                valid: true
+            })
+        }
 
+        if(GameData.TournamentsArea != null){
+            setHasTournamentsArea(true)
+            const imageName =  GameData.TournamentsArea.image.toString().replace(GameData.base_url, "");
+            const _ImageObj = {data_url : GameData.TournamentsArea.image, imageName : imageName, old : true};
+            setTournamentsArea_image_State({
+                images: [_ImageObj],
+                valid: true
+            })
+        }
+
+
+        if(GameData.SpinsArea != null){
+            setHasSpinsAre(true)
+            const imageName =  GameData.SpinsArea.image.toString().replace(GameData.base_url, "");
+            const _ImageObj = {data_url : GameData.SpinsArea.image, imageName : imageName, old : true};
+            setSpinsArea_image_State({
+                images: [_ImageObj],
+                valid: true
+            })
+        }
+
+
+
+    },[])
+
+
+
+    const UploadImage = (type, File)  => {
+        let url = GetApiUrl("games/image-upload");
+        let formData = new FormData();
+        formData.append('type', type);
+        formData.append('image', File);
+
+        const promise = axios.post(url, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': 'Bearer ' + myCookie.session,
+            }
+        })
+        const dataPromise = promise.then((response) => response.data)
+        return dataPromise
+    }
 
     const OnImagesValidation = () => {
         let HasError = false;
@@ -337,12 +520,12 @@ export default function EditGame({GameData, SocialEngagingOptions,PromoToolsOpti
         if(!hasTournamentsArea){
             delete data.TournamentsArea;
         }else{
-            data.TournamentsArea.image = TournamentsArea_image_State.images[0].file
+            data.TournamentsArea.image = TournamentsArea_image_State.images[0].imageName
         }
         if(!hasSpinsAre){
             delete data.SpinsArea;
         }else{
-            data.SpinsArea.image = SpinsArea_image_State.images[0].file
+            data.SpinsArea.image = SpinsArea_image_State.images[0].imageName
         }
         if(imageState.images.length > 0){
             if (!imageState.images[0].old){
@@ -356,24 +539,20 @@ export default function EditGame({GameData, SocialEngagingOptions,PromoToolsOpti
         }
 
         if(devicesImageState.images.length > 0) {
-            if (!devicesImageState.images[0].old) {
-            data.devices_image = devicesImageState.images[0].file;
-            }
+            data.devices_image = devicesImageState.images[0].imageName;
         }
 
         if(sliderImagesState.images.length > 0){
             const sliderImages = [];
             sliderImagesState.images.forEach(function(image) {
-                if (!image.old) {
-                    sliderImages.push(image.file);
-                }
+                sliderImages.push(image.imageName);
             });
             data.slider_images = sliderImages;
         }
-
-
-
+        console.log("data");
         console.log(data);
+
+
         const formData =  jsonToFormData(data);
         SubmitData(formData);
 
@@ -381,10 +560,14 @@ export default function EditGame({GameData, SocialEngagingOptions,PromoToolsOpti
     };
 
     const SubmitData = (formData) =>{
-        let url = GetApiUrl("games");
-        axios.post(url, formData, {headers: {'Content-Type': 'multipart/form-data'}
+        let url = GetApiUrl("games/" +GameData.id + "?_method=PUT");
+        axios.post(url, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': 'Bearer ' + myCookie.session,
+            }
         }).then(res => { // then print response status
-            console.log(res.data);
+
         }).catch(error => {
             console.log("ERRRR:: ",error.response);
         });
@@ -868,7 +1051,6 @@ export default function EditGame({GameData, SocialEngagingOptions,PromoToolsOpti
 
 
                                                                     {imageList.map((image, index) => {
-                                                                        console.log(index);
                                                                         return (
                                                                             <>
                                                                                 <UploadImageRender multiple={undefined}  image={image} imageColData={{"xs":{"span":12,"offset":0},"md":{"span":12,"offset":0},"lg":{"span":6,"offset":0},"xl":{"span":5,"offset":0}}} index={index} onImageUpload={onImageUpdate} onImageRemove={onImageRemove}/>
@@ -933,7 +1115,6 @@ export default function EditGame({GameData, SocialEngagingOptions,PromoToolsOpti
 
 
                                                                 {imageList.map((image, index) => {
-                                                                    console.log(index);
                                                                     return (
                                                                         <>
                                                                             <UploadImageRender multiple={undefined}  image={image} imageColData={{"xs":{"span":12,"offset":0},"md":{"span":12,"offset":0},"lg":{"span":6,"offset":0},"xl":{"span":5,"offset":0}}} index={index} onImageUpload={onImageUpdate} onImageRemove={onImageRemove}/>
@@ -998,7 +1179,6 @@ export default function EditGame({GameData, SocialEngagingOptions,PromoToolsOpti
 
 
                                                                 {imageList.map((image, index) => {
-                                                                    console.log(index);
                                                                     return (
                                                                         <>
                                                                             <UploadImageRender multiple={undefined}  image={image} imageColData={{"xs":{"span":12,"offset":0},"md":{"span":12,"offset":0},"lg":{"span":6,"offset":0},"xl":{"span":5,"offset":0}}} index={index} onImageUpload={onImageUpdate} onImageRemove={onImageRemove}/>
@@ -1071,7 +1251,6 @@ export default function EditGame({GameData, SocialEngagingOptions,PromoToolsOpti
                                                                 </Col>
 
                                                                 {imageList.map((image, index) => {
-                                                                    console.log(index);
                                                                     return (
                                                                         <>
                                                                             <UploadImageRender multiple={true}  image={image} imageColData={{"xs":{"span":12,"offset":0},"md":{"span":12,"offset":0},"lg":{"span":6,"offset":0},"xl":{"span":5,"offset":0}}} index={index} onImageUpload={onImageUpdate} onImageRemove={onImageRemove}/>
@@ -1224,7 +1403,6 @@ export default function EditGame({GameData, SocialEngagingOptions,PromoToolsOpti
 
 
                                                                         {imageList.map((image, index) => {
-                                                                            console.log(index);
                                                                             return (
                                                                                 <>
                                                                                     <UploadImageRender multiple={undefined}  image={image} imageColData={{"xs":{"span":12,"offset":0},"md":{"span":12,"offset":0},"lg":{"span":6,"offset":0},"xl":{"span":5,"offset":0}}} index={index} onImageUpload={onImageUpdate} onImageRemove={onImageRemove}/>
@@ -1434,7 +1612,6 @@ export default function EditGame({GameData, SocialEngagingOptions,PromoToolsOpti
 
 
                                                                         {imageList.map((image, index) => {
-                                                                            console.log(index);
                                                                             return (
                                                                                 <>
                                                                                     <UploadImageRender
@@ -1565,7 +1742,7 @@ export async function getServerSideProps({res, params}){
     let GameData = null
     await axios.get(GameDataUrl, {headers: {'Content-Type': 'multipart/form-data'}
     }).then(res => { // then print response status
-        console.log(res);
+
         if(!res.data.success){
             Error = true;
         }

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import {FormGroup, Form as UtilForm} from 'react-bootstrap-formutil';
-import {Container, Row, Col , Card, FormControl, Form as BootstrapForm, Button, FormLabel} from 'react-bootstrap';
+import {Container, Row, Col, Card, FormControl, Form as BootstrapForm, Button, FormLabel, Alert} from 'react-bootstrap';
 import StepWizard from "react-step-wizard";
 import WizardFormNav from "/components/layout/WizardFormNav";
 import ImageUploading from 'react-images-uploading';
@@ -18,7 +18,19 @@ import {LanguageValidations} from '/utility/ValidationChecker'
 import serialize from "form-serialize";
 import jsonToFormData from "../../utility/FormDataGenerator";
 
+import * as cookie from "cookie";
+import {useCookies} from "react-cookie";
+import {GetErrorsFromResponse} from "../../utility/ErrorsData";
+import SweetAlert from "react-bootstrap-sweetalert";
+
 export default function AddGame({SocialEngagingOptions,PromoToolsOptions, GamePropertiesOptions}){
+    const [myCookie, setCookie] = useCookies(["session"]);
+    const [sweetAlertState, setSweetAlertState] = React.useState(0);
+    const [errorAlertState, setErrorAlertState] = React.useState({
+        serverError : 0,
+        message : "",
+        errors : ""
+    });
 
     let submitValid = false;
     let $formutil = React.createRef();
@@ -81,22 +93,126 @@ export default function AddGame({SocialEngagingOptions,PromoToolsOptions, GamePr
     const onImageChange = (imageList, addUpdateIndex) => {
         setImageState({images : imageList, valid : true});
     };
+
     const [logoState, setLogoState] = React.useState({images: [], valid : true});
     const onLogoChange = (imageList, addUpdateIndex) => {
         setLogoState({images : imageList, valid : true});
     };
+
     const [devicesImageState, setDevicesImageState] = React.useState({images: [], valid : true});
     const onDevicesImageChange = (imageList, addUpdateIndex) => {
-        setDevicesImageState({images : imageList, valid : true});
+        if(devicesImageState.images.length > imageList.length){
+            setDevicesImageState({images : imageList, valid : true});
+            return;
+        }else {
+            if(!Array.isArray(addUpdateIndex)) {
+                UploadImage("devices-image", imageList[addUpdateIndex].file)
+                    .then(data => {
+                        if (data.success) {
+                            imageList[addUpdateIndex].imageName = data.data.image;
+                            setDevicesImageState({images: imageList, valid: true});
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        imageList.splice(addUpdateIndex, 1)
+                        let valid = true;
+                        if (imageList.length < 1){
+                            valid = false;
+                        }
+                        setDevicesImageState({images: imageList, valid: valid});
+                    })
+                return;
+            }
+            addUpdateIndex.forEach(element => {
+                UploadImage("devices-image",imageList[element].file)
+                    .then(data => {
+                        if(data.success){
+                            imageList[element].imageName = data.data.image;
+                            setDevicesImageState({images : imageList, valid : true});
+                        }
+                    })
+                    .catch(err => console.log(err))
+            })
+        }
     };
+
     const [sliderImagesState, setSliderImagesState] = React.useState({images: [], valid : true});
     const onSliderImagesChange = (imageList, addUpdateIndex) => {
-        setSliderImagesState({images : imageList, valid : true});
+        if(sliderImagesState.images.length > imageList.length){
+            setSliderImagesState({images : imageList, valid : true});
+            return;
+        }else {
+            if(!Array.isArray(addUpdateIndex)) {
+                UploadImage("sliders-image", imageList[addUpdateIndex].file)
+                    .then(data => {
+                        if (data.success) {
+                            imageList[addUpdateIndex].imageName = data.data.image;
+                            setSliderImagesState({images: imageList, valid: true});
+                        }
+                    })
+                    .catch(err => {
+
+                        imageList.splice(addUpdateIndex, 1)
+                        let valid = true;
+                        if (imageList.length < 1){
+                            valid = false;
+                        }
+                        setSliderImagesState({images: imageList, valid: valid});
+                    })
+                return;
+            }
+            addUpdateIndex.forEach(element => {
+                UploadImage("sliders-image",imageList[element].file)
+                    .then(data => {
+                        if(data.success){
+                            imageList[element].imageName = data.data.image;
+                            setSliderImagesState({images : imageList, valid : true});
+                        }
+                    })
+                    .catch(err => console.log(err))
+            })
+        }
     };
+
+
     const [TournamentsArea_image_State, setTournamentsArea_image_State] = React.useState({images: [], valid : true});
     const onTournamentsArea_image_Change = (imageList, addUpdateIndex) => {
-        setTournamentsArea_image_State({images : imageList, valid : true});
+        if(TournamentsArea_image_State.images.length > imageList.length){
+            setTournamentsArea_image_State({images : imageList, valid : true});
+            return;
+        }else {
+            if(!Array.isArray(addUpdateIndex)) {
+                UploadImage("tournaments-spins", imageList[addUpdateIndex].file)
+                    .then(data => {
+                        if (data.success) {
+                            imageList[addUpdateIndex].imageName = data.data.image;
+                            setTournamentsArea_image_State({images: imageList, valid: true});
+                        }
+                    })
+                    .catch(err => {
+                        imageList.splice(addUpdateIndex, 1)
+                        let valid = true;
+                        if (imageList.length < 1){
+                            valid = false;
+                        }
+                        setTournamentsArea_image_State({images: imageList, valid: valid});
+                    })
+                return;
+            }
+            addUpdateIndex.forEach(element => {
+                UploadImage("tournaments-spins",imageList[element].file)
+                    .then(data => {
+                        if(data.success){
+                            imageList[element].imageName = data.data.image;
+                            setTournamentsArea_image_State({images : imageList, valid : true});
+                        }
+                    })
+                    .catch(err => console.log(err))
+            })
+        }
     };
+
 
     const [tournamentsArea_en_description_State , setTournamentsArea_en_description_State] =  React.useState('');
     const TournamentsArea_en_description_Ref =  React.createRef();
@@ -117,7 +233,39 @@ export default function AddGame({SocialEngagingOptions,PromoToolsOptions, GamePr
 
     const [SpinsArea_image_State, setSpinsArea_image_State] = React.useState({images: [], valid : true});
     const onSpinsArea_image_Change = (imageList, addUpdateIndex) => {
-        setSpinsArea_image_State({images : imageList, valid : true});
+        if(SpinsArea_image_State.images.length > imageList.length){
+            setSpinsArea_image_State({images : imageList, valid : true});
+            return;
+        }else {
+            if(!Array.isArray(addUpdateIndex)) {
+                UploadImage("tournaments-spins", imageList[addUpdateIndex].file)
+                    .then(data => {
+                        if (data.success) {
+                            imageList[addUpdateIndex].imageName = data.data.image;
+                            setSpinsArea_image_State({images: imageList, valid: true});
+                        }
+                    })
+                    .catch(err => {
+                        imageList.splice(addUpdateIndex, 1)
+                        let valid = true;
+                        if (imageList.length < 1){
+                            valid = false;
+                        }
+                        setSpinsArea_image_State({images: imageList, valid: valid});
+                    })
+                return;
+            }
+            addUpdateIndex.forEach(element => {
+                UploadImage("tournaments-spins",imageList[element].file)
+                    .then(data => {
+                        if(data.success){
+                            imageList[element].imageName = data.data.image;
+                            setSpinsArea_image_State({images : imageList, valid : true});
+                        }
+                    })
+                    .catch(err => console.log(err))
+            })
+        }
     };
 
     const [spinsArea_en_description_State , setSpins_en_description_State] =  React.useState('');
@@ -138,6 +286,22 @@ export default function AddGame({SocialEngagingOptions,PromoToolsOptions, GamePr
     }
 
 
+
+    const UploadImage = (type, File)  => {
+        let url = GetApiUrl("games/image-upload");
+        let formData = new FormData();
+        formData.append('type', type);
+        formData.append('image', File);
+
+        const promise = axios.post(url, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': 'Bearer ' + myCookie.session,
+            }
+        })
+        const dataPromise = promise.then((response) => response.data)
+        return dataPromise
+    }
 
 
     const OnImagesValidation = () => {
@@ -239,15 +403,18 @@ export default function AddGame({SocialEngagingOptions,PromoToolsOptions, GamePr
 
         const form = document.querySelector('#add_form');
         const data = serialize(form, { hash: true });
+
+
+
         if(!hasTournamentsArea){
             delete data.TournamentsArea;
         }else{
-            data.TournamentsArea.image = TournamentsArea_image_State.images[0].file
+            data.TournamentsArea.image = TournamentsArea_image_State.images[0].imageName
         }
         if(!hasSpinsAre){
             delete data.SpinsArea;
         }else{
-            data.SpinsArea.image = SpinsArea_image_State.images[0].file
+            data.SpinsArea.image = SpinsArea_image_State.images[0].imageName
         }
         if(imageState.images.length > 0){
             data.image = imageState.images[0].file;
@@ -255,20 +422,21 @@ export default function AddGame({SocialEngagingOptions,PromoToolsOptions, GamePr
         if(logoState.images.length > 0){
             data.logo = logoState.images[0].file;
         }
-        if(logoState.images.length > 0){
-            data.logo = logoState.images[0].file;
-        }
+
         if(devicesImageState.images.length > 0){
-            data.devices_image = devicesImageState.images[0].file;
+            data.devices_image = devicesImageState.images[0].imageName;
         }
+
 
         if(sliderImagesState.images.length > 0){
             const sliderImages = [];
             sliderImagesState.images.forEach(function(image) {
-                sliderImages.push(image.file);
+                sliderImages.push(image.imageName);
             });
             data.slider_images = sliderImages;
         }
+        console.log("data");
+        console.log(data);
 
         const formData =  jsonToFormData(data);
         SubmitData(formData);
@@ -278,15 +446,38 @@ export default function AddGame({SocialEngagingOptions,PromoToolsOptions, GamePr
 
     const SubmitData = (formData) =>{
         let url = GetApiUrl("games");
-        axios.post(url, formData, {headers: {'Content-Type': 'multipart/form-data'}
+
+        axios.post(url, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': 'Bearer ' + myCookie.session,
+            }
         }).then(res => { // then print response status
-            console.log(res.data);
+            if(res.data.success){
+                setSweetAlertState(1);
+            }
         }).catch(error => {
-            console.log("ERRRR:: ",error);
+            const ErrorData = GetErrorsFromResponse(error.response);
+            setErrorAlertState({
+                serverError: ErrorData.serverError,
+                message: ErrorData.message,
+                errors: ErrorData.errors
+            });
+            window.scrollTo(0, 0);
         });
     }
 
     return ( <>
+        {errorAlertState.serverError != 0 &&
+        (
+            <Alert variant="danger">
+                <Alert.Heading>Error : {errorAlertState.serverError}</Alert.Heading>
+                <p>{errorAlertState.message}</p>
+                <hr />
+                <p dangerouslySetInnerHTML={{__html: errorAlertState.errors}} className="mb-0"></p>
+            </Alert>
+        )
+        }
         <Card className={'custom-card mt-3'}>
             <BootstrapForm id={"add_form"}  onSubmit={OnFormSubmit} >
                 <UtilForm $ref={$formutil}
@@ -297,7 +488,6 @@ export default function AddGame({SocialEngagingOptions,PromoToolsOptions, GamePr
                     <Card.Body>
                         <StepWizard
                             onStepChange={onStepChange}
-                            isHashEnabled
                             transitions={wizardState.transitions} // comment out for default transitions
                             instance={setWizardInstance}
                             nav={<WizardFormNav titles={WizardTitles} />} >
@@ -749,7 +939,6 @@ export default function AddGame({SocialEngagingOptions,PromoToolsOptions, GamePr
 
 
                                                                     {imageList.map((image, index) => {
-                                                                        console.log(index);
                                                                         return (
                                                                             <>
                                                                                 <UploadImageRender multiple={undefined}  image={image} imageColData={{"xs":{"span":12,"offset":0},"md":{"span":12,"offset":0},"lg":{"span":6,"offset":0},"xl":{"span":5,"offset":0}}} index={index} onImageUpload={onImageUpdate} onImageRemove={onImageRemove}/>
@@ -814,7 +1003,6 @@ export default function AddGame({SocialEngagingOptions,PromoToolsOptions, GamePr
 
 
                                                                 {imageList.map((image, index) => {
-                                                                    console.log(index);
                                                                     return (
                                                                         <>
                                                                             <UploadImageRender multiple={undefined}  image={image} imageColData={{"xs":{"span":12,"offset":0},"md":{"span":12,"offset":0},"lg":{"span":6,"offset":0},"xl":{"span":5,"offset":0}}} index={index} onImageUpload={onImageUpdate} onImageRemove={onImageRemove}/>
@@ -879,7 +1067,6 @@ export default function AddGame({SocialEngagingOptions,PromoToolsOptions, GamePr
 
 
                                                                 {imageList.map((image, index) => {
-                                                                    console.log(index);
                                                                     return (
                                                                         <>
                                                                             <UploadImageRender multiple={undefined}  image={image} imageColData={{"xs":{"span":12,"offset":0},"md":{"span":12,"offset":0},"lg":{"span":6,"offset":0},"xl":{"span":5,"offset":0}}} index={index} onImageUpload={onImageUpdate} onImageRemove={onImageRemove}/>
@@ -952,7 +1139,6 @@ export default function AddGame({SocialEngagingOptions,PromoToolsOptions, GamePr
                                                                 </Col>
 
                                                                 {imageList.map((image, index) => {
-                                                                    console.log(index);
                                                                     return (
                                                                         <>
                                                                             <UploadImageRender multiple={true}  image={image} imageColData={{"xs":{"span":12,"offset":0},"md":{"span":12,"offset":0},"lg":{"span":6,"offset":0},"xl":{"span":5,"offset":0}}} index={index} onImageUpload={onImageUpdate} onImageRemove={onImageRemove}/>
@@ -1100,7 +1286,6 @@ export default function AddGame({SocialEngagingOptions,PromoToolsOptions, GamePr
 
 
                                                                         {imageList.map((image, index) => {
-                                                                            console.log(index);
                                                                             return (
                                                                                 <>
                                                                                     <UploadImageRender multiple={undefined}  image={image} imageColData={{"xs":{"span":12,"offset":0},"md":{"span":12,"offset":0},"lg":{"span":6,"offset":0},"xl":{"span":5,"offset":0}}} index={index} onImageUpload={onImageUpdate} onImageRemove={onImageRemove}/>
@@ -1301,7 +1486,6 @@ export default function AddGame({SocialEngagingOptions,PromoToolsOptions, GamePr
 
 
                                                                         {imageList.map((image, index) => {
-                                                                            console.log(index);
                                                                             return (
                                                                                 <>
                                                                                     <UploadImageRender
@@ -1421,6 +1605,15 @@ export default function AddGame({SocialEngagingOptions,PromoToolsOptions, GamePr
                 </UtilForm>
             </BootstrapForm>
         </Card>
+        {sweetAlertState === 1 &&
+        <SweetAlert success title="The Model added successfully " onConfirm={() => {
+            Router.replace('/games')
+        }} onCancel={() => {
+            Router.replace('/games')
+        }}>
+            You clicked the button!
+        </SweetAlert>
+        }
     </>)
 }
 

@@ -21,7 +21,7 @@ export default function Login(){
 
    const  LoginSubmit = (e) =>{
        e.preventDefault();
-       if(formState.email == "test@monty.com" && formState.password == "P@ss1234"){
+       if(formState.email == "test@admin.com" && formState.password == "Monty@1234"){
            setCookie("login", true, {
                path: "/",
                maxAge: 3600, // Expires after 1hr
