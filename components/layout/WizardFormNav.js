@@ -34,7 +34,6 @@ const WizardFormNav = (props) => {
             if(props.titles.length >= Step){
                 if(props.titles[Step - 1]){
                    const  Title = props.titles[Step - 1].title;
-                   console.log(Title);
                     return Title;
                 }
             }

@@ -50,7 +50,6 @@ export const ImageUpload = ({
 
     const maxNumber = 69;
     const onChange = (imageList, addUpdateIndex) => {
-        console.log(addUpdateIndex)
         setState({images: imageList});
     };
 
@@ -125,7 +124,6 @@ export const ImageUpload = ({
                                                     }
 
                                                     {imageList.map((image, index) => {
-                                                        console.log(index);
                                                         return (
                                                             <>
                                                                 <UploadImageRender multiple={validation.multiple}  image={image} imageColData={imageCol} index={index} onImageUpload={onImageUpdate} onImageRemove={onImageRemove}/>

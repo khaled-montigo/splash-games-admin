@@ -58,9 +58,6 @@ export default class ValidationForm extends Component {
                       $validators={{
                           required: value => !!value || '该项必填',
                           maxLength: (value, len) => {
-                              console.log(value.value);
-                              console.log(len);
-                              console.log(value.length);
                               if(value.value){
                                   return value.value.length <= parseInt(len) || '最少长度：' + len
                               }

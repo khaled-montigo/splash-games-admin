@@ -14,10 +14,9 @@ const SetCodingView = () =>{
   console.log("EEEE");
   return async dispatch => {
     try {
-      console.log("AAA");
      return  dispatch(setCoding());
     } catch (err) {
-      console.log("BBB");
+
       return   dispatch(setCoding());
     }
   };

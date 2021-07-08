@@ -14,7 +14,6 @@ const Sidebar = () => {
     const FirstTime = 'FirstTime';
 
     useEffect(() => {
-        console.log("FF");
         const Path = router.asPath;
         const pathStrSplit = Path.split('/')
         setOpenMenu(pathStrSplit[1]);
@@ -58,6 +57,10 @@ const Sidebar = () => {
                         <SubMenu   onOpenChange={(open) =>  ChangeOpenName(open, 'games')}  open={CheckOpen('games')} onOpenChange={(open) =>  ChangeOpenName(open, 'games')}  title="Games" icon={<FaHeart />}>
                             <MenuItem icon={<FaGem/>}><Link href="/games/add"> Add </Link> </MenuItem>
                             <MenuItem icon={<FaGem/>}><Link href="/games"> List </Link> </MenuItem>
+                        </SubMenu>
+                        <SubMenu   onOpenChange={(open) =>  ChangeOpenName(open, 'vacancies')}  open={CheckOpen('vacancies')} onOpenChange={(open) =>  ChangeOpenName(open, 'vacancies')}  title="Vacancies" icon={<FaHeart />}>
+                            <MenuItem icon={<FaGem/>}><Link href="/vacancies/add"> Add </Link> </MenuItem>
+                            <MenuItem icon={<FaGem/>}><Link href="/vacancies"> List </Link> </MenuItem>
                         </SubMenu>
                     </Menu>
                 </ProSidebar>

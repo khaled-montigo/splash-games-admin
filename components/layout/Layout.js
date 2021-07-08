@@ -11,7 +11,6 @@ import { useRouter } from 'next/router'
 const Layout = ({children}) => {
     const [cookie, setCookie] = useCookies(["login"])
     const router = useRouter()
-    console.log(router);
    useEffect(()=>{
        if(!cookie.login){
            router.replace('/login')

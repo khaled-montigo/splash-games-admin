@@ -21,10 +21,7 @@ const ValidationFormConst = () => {
     }
 
     const handleChange = (content) =>{
-        console.log(content); //Get Content Inside Editor
-        console.log(TextControllerRef.current); //Get Content Inside Editor
         const { $setValue } = TextControllerRef.current;
-        console.log($setValue)
         $setValue(content,null);
 
     }

@@ -57,8 +57,6 @@ export const FormWizardSteps = () => {
         wizardStateSW.previousStep();
     }
     const nextStep = () => {
-        console.log(wizardState);
-        console.log(wizardStateSW);
         wizardStateSW.nextStep();
     }
     const onStepChange = (stats) => {
